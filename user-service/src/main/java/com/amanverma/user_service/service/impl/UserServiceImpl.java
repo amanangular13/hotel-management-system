@@ -12,7 +12,6 @@ import com.amanverma.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public UserResponseDTO register(UserRequestDTO dto) {
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
-                .password(passwordEncoder.encode(dto.getPassword()))
+                .password(dto.getPassword())
                 .role(Role.USER)
                 .active(true)
                 .build();
@@ -93,7 +91,7 @@ public class UserServiceImpl implements UserService {
         log.info("Phone doesn't exist, proceeding further");
         user.setPhone(dto.getPhone());
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            user.setPassword(dto.getPassword());
         }
         userRepository.save(user);
         log.info("User profile update successfully");
