@@ -1,5 +1,6 @@
 package com.amanverma.user_service.service.impl;
 
+import com.amanverma.user_service.dto.AuthResponseDTO;
 import com.amanverma.user_service.dto.UserRequestDTO;
 import com.amanverma.user_service.dto.UserResponseDTO;
 import com.amanverma.user_service.exception.InvalidRolePromotionException;
@@ -12,6 +13,7 @@ import com.amanverma.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDTO register(UserRequestDTO dto) {
@@ -43,7 +46,7 @@ public class UserServiceImpl implements UserService {
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .role(Role.USER)
                 .active(true)
                 .build();
@@ -55,14 +58,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDTO getByEmail(String email) {
+    public AuthResponseDTO getByEmail(String email) {
         log.info("Enter getByEmail()");
         log.info("Fetching user by email");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         log.info("User fetched Successfully");
         log.info("Exit getByEmail()");
-        return modelMapper.map(user, UserResponseDTO.class);
+        return modelMapper.map(user, AuthResponseDTO.class);
     }
 
     @Override

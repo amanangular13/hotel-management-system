@@ -1,15 +1,18 @@
 package com.amanverma.user_service.controller;
 
 import com.amanverma.user_service.advice.ApiResponse;
+import com.amanverma.user_service.dto.AuthResponseDTO;
 import com.amanverma.user_service.dto.UserRequestDTO;
 import com.amanverma.user_service.dto.UserResponseDTO;
 import com.amanverma.user_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -24,9 +27,9 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<ApiResponse<UserResponseDTO>> getByEmail(@PathVariable String email) {
-        UserResponseDTO userResponseDTO = userService.getByEmail(email);
-        return new ResponseEntity<>(ApiResponse.success(userResponseDTO, HttpStatus.OK), HttpStatus.OK);
+    public ResponseEntity<ApiResponse<AuthResponseDTO>> getByEmail(@PathVariable String email) {
+        AuthResponseDTO authResponseDTO = userService.getByEmail(email);
+        return new ResponseEntity<>(ApiResponse.success(authResponseDTO, HttpStatus.OK), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
