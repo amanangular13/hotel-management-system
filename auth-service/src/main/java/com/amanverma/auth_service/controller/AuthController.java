@@ -1,8 +1,7 @@
 package com.amanverma.auth_service.controller;
 
 import com.amanverma.auth_service.advice.ApiResponse;
-import com.amanverma.auth_service.dto.AuthRequestDTO;
-import com.amanverma.auth_service.dto.AuthResponseDTO;
+import com.amanverma.auth_service.dto.*;
 import com.amanverma.auth_service.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +21,30 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponseDTO>> login(@Valid @RequestBody AuthRequestDTO request) {
-        AuthResponseDTO authResponse = authService.login(request);
+    public ResponseEntity<ApiResponse<LoginResponseDTO>> login(@Valid @RequestBody LoginRequestDTO request) {
+        LoginResponseDTO loginResponse = authService.login(request);
 
-        ApiResponse<AuthResponseDTO> response = ApiResponse.<AuthResponseDTO>builder()
-                .data(authResponse)
+        ApiResponse<LoginResponseDTO> response = ApiResponse.<LoginResponseDTO>builder()
+                .data(loginResponse)
                 .error(null)
                 .success(true)
                 .message("Successfully Authenticated")
+                .httpStatus(HttpStatus.OK)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<RegisterResponseDTO>> register(@Valid @RequestBody RegisterRequestDTO request) {
+        RegisterResponseDTO registerResponse = authService.register(request);
+
+        ApiResponse<RegisterResponseDTO> response = ApiResponse.<RegisterResponseDTO>builder()
+                .data(registerResponse)
+                .error(null)
+                .success(true)
+                .message("Successfully Registered")
                 .httpStatus(HttpStatus.OK)
                 .timestamp(LocalDateTime.now())
                 .build();

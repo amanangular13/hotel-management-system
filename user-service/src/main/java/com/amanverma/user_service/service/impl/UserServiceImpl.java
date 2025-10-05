@@ -1,9 +1,7 @@
 package com.amanverma.user_service.service.impl;
 
-import com.amanverma.user_service.dto.AuthResponseDTO;
 import com.amanverma.user_service.dto.UserRequestDTO;
 import com.amanverma.user_service.dto.UserResponseDTO;
-import com.amanverma.user_service.exception.InvalidRolePromotionException;
 import com.amanverma.user_service.exception.DuplicateUserException;
 import com.amanverma.user_service.exception.UserNotFoundException;
 import com.amanverma.user_service.model.Role;
@@ -13,7 +11,6 @@ import com.amanverma.user_service.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +20,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDTO register(UserRequestDTO dto) {
@@ -46,26 +42,27 @@ public class UserServiceImpl implements UserService {
                 .name(dto.getName())
                 .email(dto.getEmail())
                 .phone(dto.getPhone())
-                .password(passwordEncoder.encode(dto.getPassword()))
+                .password(dto.getPassword())
                 .role(Role.USER)
                 .active(true)
                 .build();
 
         userRepository.save(user);
         log.info("User created successfully");
+        user.setPassword(null);
         log.info("Exit register()");
         return modelMapper.map(user, UserResponseDTO.class);
     }
 
     @Override
-    public AuthResponseDTO getByEmail(String email) {
+    public UserResponseDTO getByEmail(String email) {
         log.info("Enter getByEmail()");
         log.info("Fetching user by email");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         log.info("User fetched Successfully");
         log.info("Exit getByEmail()");
-        return modelMapper.map(user, AuthResponseDTO.class);
+        return modelMapper.map(user, UserResponseDTO.class);
     }
 
     @Override
@@ -99,38 +96,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         log.info("User profile update successfully");
         log.info("Exit updateProfile()");
-        return modelMapper.map(user, UserResponseDTO.class);
-    }
-
-    @Override
-    public UserResponseDTO promoteUser(String email) {
-        log.info("Enter promoteUser()");
-        log.info("Fetching user by email");
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        log.info("User fetched Successfully");
-        if (user.getRole() != Role.USER) {
-            throw new InvalidRolePromotionException("Only USER can be promoted");
-        }
-
-        user.setRole(Role.HOTEL_MANAGER);
-        userRepository.save(user);
-        log.info("User promoted to HOTEL_MANAGER successfully");
-        log.info("Exit promoteUser()");
-        return modelMapper.map(user, UserResponseDTO.class);
-    }
-
-    @Override
-    public UserResponseDTO deactivateUser(Long id) {
-        log.info("Enter deactivateUser()");
-        log.info("Fetching user by Id");
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
-        log.info("User fetched Successfully");
-        user.setActive(false);
-        userRepository.save(user);
-        log.info("User deactivated successfully");
-        log.info("Exit deactivateUser()");
         return modelMapper.map(user, UserResponseDTO.class);
     }
 }
