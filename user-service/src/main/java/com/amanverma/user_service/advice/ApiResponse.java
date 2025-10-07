@@ -1,6 +1,5 @@
 package com.amanverma.user_service.advice;
 
-import com.amanverma.user_service.exception.ApiException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

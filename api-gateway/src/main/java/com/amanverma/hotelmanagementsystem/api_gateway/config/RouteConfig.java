@@ -11,15 +11,18 @@ public class RouteConfig {
     @Bean
     public RouteLocator customRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("auth-service", r -> r.path("/api/auth/**")
-                        .filters(f -> f.stripPrefix(1))
+                .route("auth-service", r -> r
+                        .path("/api/v1/auth/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("lb://AUTH-SERVICE"))
-                .route("user-service-users", r -> r.path("/api/users/**")
-                        .filters(f -> f.stripPrefix(1))
+                .route("user-service", r -> r
+                        .path("/api/v1/users/**", "/api/v1/admin/users/**")
+                        .filters(f -> f.stripPrefix(2))
                         .uri("lb://USER-SERVICE"))
-                .route("user-service-admin", r -> r.path("/api/admin/**")
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://USER-SERVICE"))
+                .route("hotel-service", r -> r
+                        .path("/api/v1/hotel/**", "/api/v1/hotel-manager/hotel/**", "/api/v1/admin/hotel/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri("lb://HOTEL-SERVICE"))
                 .build();
     }
 }
