@@ -20,7 +20,7 @@ public class RouteConfig {
                         .filters(f -> f.stripPrefix(2))
                         .uri("lb://USER-SERVICE"))
                 .route("hotel-service", r -> r
-                        .path("/api/v1/hotel/**", "/api/v1/hotel-manager/hotel/**", "/api/v1/admin/hotel/**")
+                        .path("/api/v1/hotels/**", "/api/v1/hotel-manager/hotels/**", "/api/v1/admin/hotels/**")
                         .filters(f -> f.stripPrefix(2))
                         .uri("lb://HOTEL-SERVICE"))
                 .build();
