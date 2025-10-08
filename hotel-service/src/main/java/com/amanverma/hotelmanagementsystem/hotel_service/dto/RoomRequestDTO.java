@@ -1,6 +1,6 @@
 package com.amanverma.hotelmanagementsystem.hotel_service.dto;
 
-import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.RoomStatus;
+import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.Status;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -29,7 +29,7 @@ public class RoomRequestDTO {
     private Integer capacity;
 
     @NotBlank(message = "Room status is required")
-    private RoomStatus status;
+    private Status status;
 
     @NotNull(message = "Base price is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Base price must be greater than 0")

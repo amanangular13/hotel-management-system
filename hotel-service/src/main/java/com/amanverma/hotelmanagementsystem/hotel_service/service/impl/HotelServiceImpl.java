@@ -7,8 +7,7 @@ import com.amanverma.hotelmanagementsystem.hotel_service.dto.RoomResponseDTO;
 import com.amanverma.hotelmanagementsystem.hotel_service.exception.ApiException;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.Hotel;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.Room;
-import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.HotelStatus;
-import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.RoomStatus;
+import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.Status;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.RoomType;
 import com.amanverma.hotelmanagementsystem.hotel_service.repository.HotelRepository;
 import com.amanverma.hotelmanagementsystem.hotel_service.repository.RoomRepository;
@@ -34,7 +33,7 @@ public class HotelServiceImpl implements HotelService {
     public List<HotelResponseDTO> getAllHotels() {
         return hotelRepository.findAll()
                 .stream()
-                .filter(hotel -> hotel.getStatus().equals(HotelStatus.ACTIVE))
+                .filter(hotel -> hotel.getStatus().equals(Status.ACTIVE))
                 .map(hotel -> modelMapper.map(hotel, HotelResponseDTO.class))
                 .collect(Collectors.toList());
     }
@@ -43,7 +42,7 @@ public class HotelServiceImpl implements HotelService {
     public HotelResponseDTO getHotelById(Long hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ApiException("Hotel not found", HttpStatus.NOT_FOUND));
-        if(!hotel.getStatus().equals(HotelStatus.ACTIVE)) {
+        if(!hotel.getStatus().equals(Status.ACTIVE)) {
             throw new ApiException("Hotel is deactivated", HttpStatus.NOT_FOUND);
         }
         return modelMapper.map(hotel, HotelResponseDTO.class);
@@ -63,7 +62,7 @@ public class HotelServiceImpl implements HotelService {
                 .contactNumber(hotelRequestDTO.getContactNumber())
                 .managerId(userId)
                 .rating(null)
-                .status(HotelStatus.ACTIVE)
+                .status(Status.ACTIVE)
                 .amenities(hotelRequestDTO.getAmenities())
                 .imageUrls(hotelRequestDTO.getImageUrls())
                 .build();
@@ -76,16 +75,16 @@ public class HotelServiceImpl implements HotelService {
     public HotelResponseDTO updateHotel(Long hotelId, HotelRequestDTO hotelRequestDTO) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ApiException("Hotel not found", HttpStatus.NOT_FOUND));
-        if(!hotel.getStatus().equals(HotelStatus.ACTIVE)) {
+        if(!hotel.getStatus().equals(Status.ACTIVE)) {
             throw new ApiException("Cannot update deactivated hotel", HttpStatus.BAD_REQUEST);
         }
 
         if(StringUtils.hasText(hotelRequestDTO.getName())) hotel.setName(hotelRequestDTO.getName());
-        if(StringUtils.hasText(hotelRequestDTO.getDescription())) hotel.setName(hotelRequestDTO.getDescription());
-        if(StringUtils.hasText(hotelRequestDTO.getContactEmail())) hotel.setName(hotelRequestDTO.getContactEmail());
-        if(StringUtils.hasText(hotelRequestDTO.getContactNumber())) hotel.setName(hotelRequestDTO.getContactNumber());
+        if(StringUtils.hasText(hotelRequestDTO.getDescription())) hotel.setDescription(hotelRequestDTO.getDescription());
+        if(StringUtils.hasText(hotelRequestDTO.getContactEmail())) hotel.setContactEmail(hotelRequestDTO.getContactEmail());
+        if(StringUtils.hasText(hotelRequestDTO.getContactNumber())) hotel.setContactNumber(hotelRequestDTO.getContactNumber());
         if(hotelRequestDTO.getImageUrls() != null) hotel.setImageUrls(hotelRequestDTO.getImageUrls());
-        if(hotelRequestDTO.getAmenities() != null) hotel.setImageUrls(hotelRequestDTO.getAmenities());
+        if(hotelRequestDTO.getAmenities() != null) hotel.setAmenities(hotelRequestDTO.getAmenities());
 
         Hotel updated = hotelRepository.save(hotel);
         return modelMapper.map(updated, HotelResponseDTO.class);
@@ -95,7 +94,7 @@ public class HotelServiceImpl implements HotelService {
     public void deleteHotel(Long hotelId) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ApiException("Hotel not found", HttpStatus.NOT_FOUND));
-        hotel.setStatus(HotelStatus.INACTIVE);
+        hotel.setStatus(Status.INACTIVE);
         hotelRepository.save(hotel);
     }
 
@@ -103,7 +102,7 @@ public class HotelServiceImpl implements HotelService {
     public RoomResponseDTO addRoomToHotel(Long hotelId, RoomRequestDTO roomRequestDTO) {
         Hotel hotel = hotelRepository.findById(hotelId)
                 .orElseThrow(() -> new ApiException("Hotel not found", HttpStatus.NOT_FOUND));
-        if(!hotel.getStatus().equals(HotelStatus.ACTIVE)) {
+        if(!hotel.getStatus().equals(Status.ACTIVE)) {
             throw new ApiException("Cannot add room to deactivated hotel", HttpStatus.BAD_REQUEST);
         }
 
@@ -113,7 +112,7 @@ public class HotelServiceImpl implements HotelService {
                 .capacity(roomRequestDTO.getCapacity())
                 .basePrice(roomRequestDTO.getBasePrice())
                 .imageUrls(roomRequestDTO.getImageUrls())
-                .status(RoomStatus.AVAILABLE)
+                .status(Status.ACTIVE)
                 .hotel(hotel)
                 .build();
 
@@ -128,8 +127,9 @@ public class HotelServiceImpl implements HotelService {
 
         if(StringUtils.hasText(roomRequestDTO.getRoomNumber())) room.setRoomNumber(roomRequestDTO.getRoomNumber());
         if(StringUtils.hasText(roomRequestDTO.getType())) room.setType(RoomType.valueOf(roomRequestDTO.getType()));
-        if(StringUtils.hasText(roomRequestDTO.getStatus().toString())) room.setStatus(RoomStatus.valueOf(roomRequestDTO.getStatus().toString()));
+        if(StringUtils.hasText(roomRequestDTO.getStatus().toString())) room.setStatus(Status.valueOf(roomRequestDTO.getStatus().toString()));
         if(roomRequestDTO.getCapacity() != null) room.setCapacity(roomRequestDTO.getCapacity());
+        if(roomRequestDTO.getBasePrice() != null) room.setBasePrice(roomRequestDTO.getBasePrice());
         if(roomRequestDTO.getImageUrls() != null) room.setImageUrls(roomRequestDTO.getImageUrls());
 
         Room updated = roomRepository.save(room);
@@ -140,6 +140,7 @@ public class HotelServiceImpl implements HotelService {
     public void deleteRoom(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ApiException("Room not found", HttpStatus.NOT_FOUND));
-        roomRepository.delete(room);
+        room.setStatus(Status.INACTIVE);
+        roomRepository.save(room);
     }
 }

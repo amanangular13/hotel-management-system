@@ -1,7 +1,6 @@
 package com.amanverma.hotelmanagementsystem.hotel_service.model.enums;
 
-public enum HotelStatus {
+public enum Status {
     ACTIVE,
-    INACTIVE,
-    UNDER_MAINTENANCE
+    INACTIVE
 }

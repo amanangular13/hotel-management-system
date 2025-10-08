@@ -1,6 +1,6 @@
 package com.amanverma.hotelmanagementsystem.hotel_service.model;
 
-import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.HotelStatus;
+import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -65,7 +65,7 @@ public class Hotel {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private HotelStatus status;
+    private Status status;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Room> rooms;
@@ -82,7 +82,7 @@ public class Hotel {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (status == null) status = HotelStatus.ACTIVE;
+        if (status == null) status = Status.ACTIVE;
     }
 
     @PreUpdate
