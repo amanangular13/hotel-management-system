@@ -27,6 +27,10 @@ public class RouteConfig {
                         .path("/api/v1/loyalty/**")
                         .filters(f -> f.stripPrefix(2))
                         .uri("lb://LOYALTY-SERVICE"))
+                .route("inventory-service", r -> r
+                        .path("/api/v1/inventory/**", "/api/v1/hotel-manager/inventory/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri("lb://INVENTORY-SERVICE"))
                 .build();
     }
 }
