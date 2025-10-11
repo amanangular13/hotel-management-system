@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,8 +42,18 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     public boolean checkAvailability(Long roomId, LocalDate startDate, LocalDate endDate) {
-        return !inventoryRepository.existsByRoomIdAndDateBetweenAndIsAvailableFalse(roomId, startDate, endDate);
+        List<LocalDate> dates = startDate.datesUntil(endDate.plusDays(1)).toList();
+        List<Inventory> inventoryList = inventoryRepository.findByRoomIdAndDateBetween(roomId, startDate, endDate);
+
+        Set<LocalDate> availableDates = inventoryList.stream()
+                .filter(Inventory::getIsAvailable)
+                .map(Inventory::getDate)
+                .collect(Collectors.toSet());
+
+        return availableDates.containsAll(dates);
+
     }
+
 
     public void markUnavailable(InventoryRequestDTO request) {
         List<Inventory> inventories = inventoryRepository.findByRoomIdAndDateBetween(

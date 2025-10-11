@@ -9,8 +9,5 @@ import java.util.List;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
-
     List<Inventory> findByRoomIdAndDateBetween(Long roomId, LocalDate startDate, LocalDate endDate);
-
-    boolean existsByRoomIdAndDateBetweenAndIsAvailableFalse(Long roomId, LocalDate startDate, LocalDate endDate);
 }
