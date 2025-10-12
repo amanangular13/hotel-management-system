@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
@@ -35,6 +37,12 @@ public class PaymentController {
     public ResponseEntity<ApiResponse<PaymentResponseDTO>> getPaymentByTransactionId(@PathVariable String transactionId) {
         return ResponseEntity.ok(ApiResponse.success(
                 paymentService.getPaymentByTransactionId(transactionId), HttpStatus.OK));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ApiResponse<List<PaymentResponseDTO>>> getPaymentByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(ApiResponse.success(
+                paymentService.getPaymentByUserId(userId), HttpStatus.OK));
     }
 }
 

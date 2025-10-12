@@ -21,6 +21,10 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "User ID is required")
+    @Column(nullable = false)
+    private Long userId;
+
     @NotNull(message = "Booking ID is required")
     @Column(nullable = false)
     private Long bookingId;

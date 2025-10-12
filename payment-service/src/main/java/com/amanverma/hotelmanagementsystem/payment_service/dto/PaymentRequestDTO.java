@@ -14,6 +14,9 @@ public class PaymentRequestDTO {
     @NotNull(message = "Booking ID is required")
     private Long bookingId;
 
+    @NotNull(message = "User ID is required")
+    private Long userId;
+
     @NotNull(message = "Amount is required")
     @Min(value = 1, message = "Amount must be at least 1")
     private Double amount;
@@ -21,6 +24,6 @@ public class PaymentRequestDTO {
     @NotBlank(message = "Payment method is required")
     private String paymentMethod; // CARD / UPI / WALLET
 
-    private Boolean useLoyaltyPoints = false;  // true → deduct points from Loyalty Service
+    private Boolean usedLoyaltyPoints = false;
 }
 
