@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/admin/users")
@@ -15,6 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<UserResponseDTO>>> getRequestList() {
+        List<UserResponseDTO> users = adminService.getRequestList();
+        return new ResponseEntity<>(ApiResponse.success(users, HttpStatus.OK), HttpStatus.OK);
+    }
 
     @PutMapping("/promote")
     public ResponseEntity<ApiResponse<UserResponseDTO>> promote(@RequestParam String email) {

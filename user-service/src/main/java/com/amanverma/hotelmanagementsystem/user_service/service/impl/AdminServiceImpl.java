@@ -12,6 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -32,6 +35,7 @@ public class AdminServiceImpl implements AdminService {
         }
 
         user.setRole(Role.HOTEL_MANAGER);
+        user.setRequestedForHotelManager(false);
         userRepository.save(user);
         log.info("User promoted to HOTEL_MANAGER successfully");
         user.setPassword(null);
@@ -52,5 +56,13 @@ public class AdminServiceImpl implements AdminService {
         user.setPassword(null);
         log.info("Exit deactivateUser()");
         return modelMapper.map(user, UserResponseDTO.class);
+    }
+
+    @Override
+    public List<UserResponseDTO> getRequestList() {
+        return userRepository.findByRequestedForHotelManagerTrue()
+                .stream()
+                .map(user -> modelMapper.map(user, UserResponseDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -57,6 +57,8 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
+    private boolean requestedForHotelManager;
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
