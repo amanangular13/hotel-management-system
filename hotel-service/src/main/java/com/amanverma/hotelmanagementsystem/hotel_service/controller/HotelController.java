@@ -35,4 +35,14 @@ public class HotelController {
                 .data(hotel)
                 .build());
     }
+
+    @GetMapping("/rooms/{roomId}/price")
+    public ResponseEntity<ApiResponse<Double>> getRoomPrice(@PathVariable Long roomId) {
+        Double price = hotelService.getRoomPrice(roomId);
+        return ResponseEntity.ok(ApiResponse.<Double>builder()
+                .success(true)
+                .message("Room price fetched successfully")
+                .data(price)
+                .build());
+    }
 }

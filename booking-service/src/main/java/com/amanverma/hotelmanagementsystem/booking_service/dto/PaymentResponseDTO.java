@@ -8,6 +8,9 @@ import lombok.*;
 @Builder
 public class PaymentResponseDTO {
     private String transactionId;
-    private Boolean success;
     private Double amount;
+    private Boolean usedLoyaltyPoints;
+    private Integer loyaltyPointsUsed;
+    private Double finalAmountCharged;
+    private String status;
 }

@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/bookings")
+@RequestMapping("/bookings")
 @RequiredArgsConstructor
 public class BookingController {
 
@@ -21,5 +21,15 @@ public class BookingController {
         BookingResponseDTO response = bookingService.createBooking(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response, HttpStatus.CREATED));
+    }
+
+    @PutMapping("/{bookingId}")
+    public void updateBooking(@RequestParam Long bookingId) {
+        bookingService.updateBooking(bookingId);
+    }
+
+    @PutMapping("/{bookingId}/cancel")
+    public void cancelBooking(@RequestParam Long bookingId) {
+        bookingService.cancelBooking(bookingId);
     }
 }

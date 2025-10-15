@@ -39,7 +39,7 @@ public class Payment {
     private PaymentStatus status;
 
     @Column(nullable = false, length = 50)
-    private String paymentMethod; // CARD / UPI / WALLET
+    private String paymentMethod;
 
     private String transactionId;
 

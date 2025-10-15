@@ -20,7 +20,7 @@ public class PaymentResponseDTO {
     private PaymentStatus status;
     private String transactionId;
     private String paymentMethod;
-    private Boolean usedLoyaltyPoints;
+    private Boolean useLoyaltyPoints;
     private Integer loyaltyPointsUsed;
     private Double finalAmountCharged;
     private LocalDateTime createdAt;

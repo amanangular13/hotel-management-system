@@ -137,6 +137,13 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    public Double getRoomPrice(Long roomId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ApiException("Room not found", HttpStatus.NOT_FOUND));
+        return room.getBasePrice();
+    }
+
+    @Override
     public void deleteRoom(Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ApiException("Room not found", HttpStatus.NOT_FOUND));

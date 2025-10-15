@@ -24,4 +24,6 @@ public interface HotelService {
     RoomResponseDTO addRoomToHotel(Long hotelId, RoomRequestDTO roomRequestDTO);
 
     RoomResponseDTO updateRoom(Long roomId, RoomRequestDTO roomRequestDTO);
+
+    Double getRoomPrice(Long roomId);
 }

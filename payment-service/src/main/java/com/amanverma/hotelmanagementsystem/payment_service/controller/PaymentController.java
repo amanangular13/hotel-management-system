@@ -27,6 +27,13 @@ public class PaymentController {
         return ResponseEntity.ok(ApiResponse.success(response, HttpStatus.OK));
     }
 
+    @PutMapping("/refund")
+    public ResponseEntity<ApiResponse<PaymentResponseDTO>> refund(@RequestParam String transactionId) {
+
+        PaymentResponseDTO response = paymentService.refund(transactionId);
+        return ResponseEntity.ok(ApiResponse.success(response, HttpStatus.OK));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<PaymentResponseDTO>> getPaymentById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(

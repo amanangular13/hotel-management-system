@@ -22,8 +22,8 @@ public class PaymentRequestDTO {
     private Double amount;
 
     @NotBlank(message = "Payment method is required")
-    private String paymentMethod; // CARD / UPI / WALLET
+    private String paymentMethod;
 
-    private Boolean usedLoyaltyPoints = false;
+    private Boolean useLoyaltyPoints = false;
 }
 

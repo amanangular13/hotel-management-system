@@ -34,7 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
         try {
             int loyaltyPointsUsed = 0;
             double discount = 0.0;
-            if (Boolean.TRUE.equals(request.getUsedLoyaltyPoints())) {
+            if (Boolean.TRUE.equals(request.getUseLoyaltyPoints())) {
                 loyaltyPointsUsed = loyaltyClient.getPoints(request.getUserId()).getData().getPoints();
                 discount = loyaltyPointsUsed * 0.5;
             }
@@ -54,7 +54,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .status(status)
                     .paymentMethod(request.getPaymentMethod())
                     .transactionId(transactionId)
-                    .usedLoyaltyPoints(request.getUsedLoyaltyPoints())
+                    .usedLoyaltyPoints(request.getUseLoyaltyPoints())
                     .loyaltyPointsUsed(loyaltyPointsUsed)
                     .build();
 
@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .status(payment.getStatus())
                     .paymentMethod(payment.getPaymentMethod())
                     .transactionId(payment.getTransactionId())
-                    .usedLoyaltyPoints(payment.getUsedLoyaltyPoints())
+                    .useLoyaltyPoints(payment.getUsedLoyaltyPoints())
                     .loyaltyPointsUsed(payment.getLoyaltyPointsUsed())
                     .finalAmountCharged(payment.getFinalAmountCharged())
                     .createdAt(payment.getCreatedAt())
@@ -76,6 +76,16 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (Exception e) {
             throw new ApiException("Payment processing failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public PaymentResponseDTO refund(String transactionId) {
+        Payment payment = paymentRepository.findByTransactionId(transactionId)
+                .orElseThrow(() -> new ApiException("Transaction not found", HttpStatus.NOT_FOUND));
+
+        payment.setStatus(PaymentStatus.REFUNDED);
+        paymentRepository.save(payment);
+        return modelMapper.map(payment, PaymentResponseDTO.class);
     }
 
     @Override

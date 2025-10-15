@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface PaymentService {
     PaymentResponseDTO processPayment(PaymentRequestDTO request);
+    PaymentResponseDTO refund(String transactionId);
     PaymentResponseDTO getPaymentById(Long id);
     PaymentResponseDTO getPaymentByTransactionId(String transactionId);
     List<PaymentResponseDTO> getPaymentByUserId(Long userId);

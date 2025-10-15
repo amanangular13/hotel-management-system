@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class BookingResponseDTO {
+    private Long id;
     private Long bookingId;
     private Long userId;
     private Long roomId;

@@ -23,6 +23,9 @@ public class Booking {
     private Long id;
 
     @NotNull
+    private String bookingId;
+
+    @NotNull
     private Long userId;
 
     @NotNull
@@ -41,9 +44,9 @@ public class Booking {
     private PaymentMode paymentMode;
 
     private Double totalAmount;
-    private Boolean usedLoyaltyPoints;
-    private Double loyaltyDiscount;
-
+    private Boolean useLoyaltyPoints;
+    private Integer loyaltyDiscount;
+    private String transactionId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
