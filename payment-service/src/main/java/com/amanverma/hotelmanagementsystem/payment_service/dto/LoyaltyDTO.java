@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoyaltyResponseDTO {
+public class LoyaltyDTO {
 
     private Long userId;
     private Integer points;

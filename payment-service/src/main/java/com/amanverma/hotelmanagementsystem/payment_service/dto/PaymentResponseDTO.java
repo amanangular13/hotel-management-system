@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class PaymentResponseDTO {
 
     private Long id;
-    private Long bookingId;
+    private String bookingId;
     private Double amount;
     private PaymentStatus status;
     private String transactionId;

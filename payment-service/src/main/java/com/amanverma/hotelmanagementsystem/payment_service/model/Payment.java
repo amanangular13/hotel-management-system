@@ -27,7 +27,7 @@ public class Payment {
 
     @NotNull(message = "Booking ID is required")
     @Column(nullable = false)
-    private Long bookingId;
+    private String bookingId;
 
     @NotNull(message = "Amount is required")
     @Min(value = 1, message = "Amount must be at least 1")
@@ -43,7 +43,7 @@ public class Payment {
 
     private String transactionId;
 
-    private Boolean usedLoyaltyPoints = false;
+    private Boolean useLoyaltyPoints = false;
 
     private Integer loyaltyPointsUsed = 0;
 

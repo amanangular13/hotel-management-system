@@ -23,7 +23,7 @@ public class LoyaltyServiceImpl implements LoyaltyService {
         Loyalty loyalty = loyaltyRepository.findByUserId(requestDTO.getUserId())
                 .orElse(Loyalty.builder()
                         .userId(requestDTO.getUserId())
-                        .points(0)
+                        .points(500)
                         .build());
 
         loyalty.setPoints(loyalty.getPoints() + requestDTO.getPoints());

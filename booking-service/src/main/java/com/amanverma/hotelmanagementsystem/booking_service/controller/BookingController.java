@@ -24,12 +24,16 @@ public class BookingController {
     }
 
     @PutMapping("/{bookingId}")
-    public void updateBooking(@RequestParam Long bookingId) {
-        bookingService.updateBooking(bookingId);
+    public ResponseEntity<ApiResponse<BookingResponseDTO>> updateBooking(@PathVariable String bookingId) {
+        BookingResponseDTO response = bookingService.updateBooking(bookingId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response, HttpStatus.OK));
     }
 
     @PutMapping("/{bookingId}/cancel")
-    public void cancelBooking(@RequestParam Long bookingId) {
-        bookingService.cancelBooking(bookingId);
+    public ResponseEntity<ApiResponse<BookingResponseDTO>> cancelBooking(@PathVariable String bookingId) {
+        BookingResponseDTO response = bookingService.cancelBooking(bookingId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response, HttpStatus.OK));
     }
 }

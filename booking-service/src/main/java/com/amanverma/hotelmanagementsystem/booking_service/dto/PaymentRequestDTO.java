@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PaymentRequestDTO {
 
-    private Long bookingId;
+    private String bookingId;
     private Long userId;
     private Double amount;
     private String paymentMethod;
-    private Boolean usedLoyaltyPoints = false;
+    private Boolean useLoyaltyPoints = false;
 }
 

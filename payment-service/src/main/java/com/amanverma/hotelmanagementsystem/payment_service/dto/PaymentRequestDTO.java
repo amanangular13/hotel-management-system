@@ -12,7 +12,7 @@ import lombok.*;
 public class PaymentRequestDTO {
 
     @NotNull(message = "Booking ID is required")
-    private Long bookingId;
+    private String bookingId;
 
     @NotNull(message = "User ID is required")
     private Long userId;

@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .permitAll()
                         .pathMatchers("/api/v1/inventory/**")
                         .permitAll()
-                        .pathMatchers("/api/v1/users/**")
+                        .pathMatchers("/api/v1/users/**", "/api/v1/payments/**", "/api/v1/bookings")
                             .hasAnyRole(USER.toString(), HOTEL_MANAGER.toString(), ADMIN.toString())
                         .pathMatchers("/api/v1/hotel-manager/**")
                             .hasAnyRole(HOTEL_MANAGER.toString(), ADMIN.toString())

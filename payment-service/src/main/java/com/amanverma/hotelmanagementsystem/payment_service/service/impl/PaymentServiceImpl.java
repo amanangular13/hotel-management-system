@@ -1,5 +1,6 @@
 package com.amanverma.hotelmanagementsystem.payment_service.service.impl;
 
+import com.amanverma.hotelmanagementsystem.payment_service.dto.LoyaltyDTO;
 import com.amanverma.hotelmanagementsystem.payment_service.dto.PaymentRequestDTO;
 import com.amanverma.hotelmanagementsystem.payment_service.dto.PaymentResponseDTO;
 import com.amanverma.hotelmanagementsystem.payment_service.exception.ApiException;
@@ -32,14 +33,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
         try {
-            int loyaltyPointsUsed = 0;
+            int loyaltyPoints = 0;
             double discount = 0.0;
             if (Boolean.TRUE.equals(request.getUseLoyaltyPoints())) {
-                loyaltyPointsUsed = loyaltyClient.getPoints(request.getUserId()).getData().getPoints();
-                discount = loyaltyPointsUsed * 0.5;
+                loyaltyPoints = loyaltyClient.getPoints(request.getUserId()).getData().getPoints();
+                discount = loyaltyPoints * 0.5;
             }
 
-            double finalAmount = request.getAmount() - discount;
+            double finalAmount = request.getAmount() - (int)discount;
             String transactionId = UUID.randomUUID().toString();
 
             boolean success = paymentGatewaySimulator.processTransaction(transactionId, finalAmount);
@@ -54,11 +55,26 @@ public class PaymentServiceImpl implements PaymentService {
                     .status(status)
                     .paymentMethod(request.getPaymentMethod())
                     .transactionId(transactionId)
-                    .usedLoyaltyPoints(request.getUseLoyaltyPoints())
-                    .loyaltyPointsUsed(loyaltyPointsUsed)
+                    .useLoyaltyPoints(request.getUseLoyaltyPoints())
+                    .loyaltyPointsUsed((int)discount)
                     .build();
 
             paymentRepository.save(payment);
+
+            if(success && request.getUseLoyaltyPoints()) {
+                LoyaltyDTO redeem = LoyaltyDTO.builder()
+                        .userId(request.getUserId())
+                        .points((int)discount)
+                        .build();
+                loyaltyClient.redeemPoints(redeem);
+
+                int awardPoint = (int) (finalAmount * 0.05);
+                LoyaltyDTO add = LoyaltyDTO.builder()
+                        .userId(request.getUserId())
+                        .points(awardPoint)
+                        .build();
+                loyaltyClient.addPoints(add);
+            }
 
             return PaymentResponseDTO.builder()
                     .id(payment.getId())
@@ -67,7 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .status(payment.getStatus())
                     .paymentMethod(payment.getPaymentMethod())
                     .transactionId(payment.getTransactionId())
-                    .useLoyaltyPoints(payment.getUsedLoyaltyPoints())
+                    .useLoyaltyPoints(payment.getUseLoyaltyPoints())
                     .loyaltyPointsUsed(payment.getLoyaltyPointsUsed())
                     .finalAmountCharged(payment.getFinalAmountCharged())
                     .createdAt(payment.getCreatedAt())
@@ -79,13 +95,28 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public PaymentResponseDTO refund(String transactionId) {
         Payment payment = paymentRepository.findByTransactionId(transactionId)
                 .orElseThrow(() -> new ApiException("Transaction not found", HttpStatus.NOT_FOUND));
 
+        if(payment.getUseLoyaltyPoints()) {
+            LoyaltyDTO redeemed = LoyaltyDTO.builder()
+                    .userId(payment.getUserId())
+                    .points(payment.getLoyaltyPointsUsed())
+                    .build();
+            loyaltyClient.addPoints(redeemed);
+
+            LoyaltyDTO added = LoyaltyDTO.builder()
+                    .userId(payment.getUserId())
+                    .points((int) (payment.getFinalAmountCharged() * 0.05))
+                    .build();
+            loyaltyClient.redeemPoints(added);
+
+        }
         payment.setStatus(PaymentStatus.REFUNDED);
-        paymentRepository.save(payment);
-        return modelMapper.map(payment, PaymentResponseDTO.class);
+        Payment saved = paymentRepository.save(payment);
+        return modelMapper.map(saved, PaymentResponseDTO.class);
     }
 
     @Override

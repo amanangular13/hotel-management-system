@@ -1,5 +1,6 @@
 package com.amanverma.hotelmanagementsystem.booking_service.feign;
 
+import com.amanverma.hotelmanagementsystem.booking_service.advice.ApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,5 +9,5 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface HotelClient {
 
     @GetMapping("/rooms/{roomId}/price")
-    Double getRoomPrice(@PathVariable Long roomId);
+    ApiResponse<Double> getRoomPrice(@PathVariable Long roomId);
 }

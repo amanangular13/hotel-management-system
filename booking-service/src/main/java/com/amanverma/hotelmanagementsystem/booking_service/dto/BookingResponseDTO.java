@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class BookingResponseDTO {
     private Long id;
-    private Long bookingId;
+    private String bookingId;
     private Long userId;
     private Long roomId;
     private LocalDate checkInDate;
@@ -21,5 +21,5 @@ public class BookingResponseDTO {
     private PaymentMode paymentMode;
     private Double totalAmount;
     private Double loyaltyDiscount;
-    private Boolean usedLoyaltyPoints;
+    private Boolean useLoyaltyPoints;
 }

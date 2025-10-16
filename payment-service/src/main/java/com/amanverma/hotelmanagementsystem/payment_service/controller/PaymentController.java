@@ -19,7 +19,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    @PostMapping
+    @PostMapping("/process")
     public ResponseEntity<ApiResponse<PaymentResponseDTO>> processPayment(
             @Valid @RequestBody PaymentRequestDTO request) {
 

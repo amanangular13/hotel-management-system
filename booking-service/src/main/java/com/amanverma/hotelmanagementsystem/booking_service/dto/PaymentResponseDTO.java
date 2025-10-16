@@ -9,7 +9,7 @@ import lombok.*;
 public class PaymentResponseDTO {
     private String transactionId;
     private Double amount;
-    private Boolean usedLoyaltyPoints;
+    private Boolean useLoyaltyPoints;
     private Integer loyaltyPointsUsed;
     private Double finalAmountCharged;
     private String status;

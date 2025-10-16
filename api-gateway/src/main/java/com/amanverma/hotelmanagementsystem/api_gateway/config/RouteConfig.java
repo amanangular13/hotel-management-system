@@ -31,6 +31,14 @@ public class RouteConfig {
                         .path("/api/v1/inventory/**", "/api/v1/hotel-manager/inventory/**")
                         .filters(f -> f.stripPrefix(2))
                         .uri("lb://INVENTORY-SERVICE"))
+                .route("payment-service", r -> r
+                        .path("/api/v1/payments/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri("lb://PAYMENT-SERVICE"))
+                .route("booking-service", r -> r
+                        .path("/api/v1/bookings/**")
+                        .filters(f -> f.stripPrefix(2))
+                        .uri("lb://BOOKING-SERVICE"))
                 .build();
     }
 }
