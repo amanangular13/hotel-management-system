@@ -7,6 +7,7 @@ import com.amanverma.hotelmanagementsystem.booking_service.model.Booking;
 import com.amanverma.hotelmanagementsystem.booking_service.model.enums.BookingStatus;
 import com.amanverma.hotelmanagementsystem.booking_service.repository.BookingRepository;
 import com.amanverma.hotelmanagementsystem.booking_service.service.BookingService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class BookingServiceImpl implements BookingService {
     private final ModelMapper mapper;
 
     @Override
+    @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackCreateBooking")
     public BookingResponseDTO createBooking(BookingRequestDTO request) {
         Boolean available = inventoryClient.isRoomAvailable(
                 request.getRoomId(),
@@ -100,7 +102,13 @@ public class BookingServiceImpl implements BookingService {
         return mapper.map(saved, BookingResponseDTO.class);
     }
 
+    public BookingResponseDTO fallbackCreateBooking(BookingRequestDTO request, Throwable t) {
+       throw new ApiException("Booking service is temporarily unavailable. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+
     @Override
+    @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackUpdateBooking")
     public BookingResponseDTO updateBooking(String bookingId) {
         Booking booking = bookingRepository.findByBookingId(bookingId)
                 .orElseThrow(()-> new ApiException("Booking not found", HttpStatus.NOT_FOUND));
@@ -132,7 +140,12 @@ public class BookingServiceImpl implements BookingService {
         return mapper.map(saved, BookingResponseDTO.class);
     }
 
+    public BookingResponseDTO fallbackUpdateBooking(String bookingId, Throwable t) {
+        throw new ApiException("Booking service is temporarily unavailable. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
     @Override
+    @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackCancelBooking")
     public BookingResponseDTO cancelBooking(String bookingId) {
         Booking booking = bookingRepository.findByBookingId(bookingId)
                 .orElseThrow(()-> new ApiException("Booking not found", HttpStatus.NOT_FOUND));
@@ -148,5 +161,9 @@ public class BookingServiceImpl implements BookingService {
         booking.setStatus(BookingStatus.CANCELLED);
         Booking saved = bookingRepository.save(booking);
         return mapper.map(saved, BookingResponseDTO.class);
+    }
+
+    public BookingResponseDTO cancelBooking(String bookingId, Throwable t) {
+        throw new ApiException("Booking service is temporarily unavailable. Please try again later.", HttpStatus.SERVICE_UNAVAILABLE);
     }
 }
