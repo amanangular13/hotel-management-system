@@ -8,6 +8,7 @@ import com.amanverma.hotelmanagementsystem.booking_service.model.enums.BookingSt
 import com.amanverma.hotelmanagementsystem.booking_service.repository.BookingRepository;
 import com.amanverma.hotelmanagementsystem.booking_service.service.BookingService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final ModelMapper mapper;
 
     @Override
+    @Retry(name = "bookingRetry")
     @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackCreateBooking")
     public BookingResponseDTO createBooking(BookingRequestDTO request) {
         Boolean available = inventoryClient.isRoomAvailable(
@@ -108,6 +110,7 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
+    @Retry(name = "bookingRetry")
     @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackUpdateBooking")
     public BookingResponseDTO updateBooking(String bookingId) {
         Booking booking = bookingRepository.findByBookingId(bookingId)
@@ -145,6 +148,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Retry(name = "bookingRetry")
     @CircuitBreaker(name = "bookingBreaker", fallbackMethod = "fallbackCancelBooking")
     public BookingResponseDTO cancelBooking(String bookingId) {
         Booking booking = bookingRepository.findByBookingId(bookingId)
