@@ -8,6 +8,7 @@ import com.amanverma.hotelmanagementsystem.inventory_service.service.InventorySe
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -73,6 +74,12 @@ public class InventoryServiceImpl implements InventoryService {
         }
         inventories.forEach(inv -> inv.setIsAvailable(true));
         inventoryRepository.saveAll(inventories);
+    }
+
+    @Override
+    @Transactional
+    public void deleteInavtice(Long roomId) {
+        inventoryRepository.deleteByRoomId(roomId);
     }
 
     private InventoryResponseDTO toResponseDTO(Inventory inv) {

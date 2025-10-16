@@ -13,4 +13,6 @@ public interface InventoryService {
     void markUnavailable(InventoryRequestDTO request);
 
     void markAvailable(InventoryRequestDTO request);
+
+    void deleteInavtice(Long roomId);
 }

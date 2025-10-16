@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findByRoomIdAndDateBetween(Long roomId, LocalDate startDate, LocalDate endDate);
+    void deleteByRoomId(Long roomId);
 }

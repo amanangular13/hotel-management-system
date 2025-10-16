@@ -39,4 +39,10 @@ public class InventoryController {
         inventoryService.markAvailable(request);
         return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK));
     }
+
+    @PutMapping("/delete/inactive/{roomId}")
+    public ResponseEntity<ApiResponse<Void>> deleteInactive(@PathVariable Long roomId) {
+        inventoryService.deleteInavtice(roomId);
+        return ResponseEntity.ok(ApiResponse.success(null, HttpStatus.OK));
+    }
 }

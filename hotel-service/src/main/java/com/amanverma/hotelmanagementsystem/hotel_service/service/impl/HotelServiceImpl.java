@@ -5,6 +5,7 @@ import com.amanverma.hotelmanagementsystem.hotel_service.dto.HotelResponseDTO;
 import com.amanverma.hotelmanagementsystem.hotel_service.dto.RoomRequestDTO;
 import com.amanverma.hotelmanagementsystem.hotel_service.dto.RoomResponseDTO;
 import com.amanverma.hotelmanagementsystem.hotel_service.exception.ApiException;
+import com.amanverma.hotelmanagementsystem.hotel_service.feign.InventoryClient;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.Hotel;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.Room;
 import com.amanverma.hotelmanagementsystem.hotel_service.model.enums.Status;
@@ -27,6 +28,7 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final RoomRepository roomRepository;
+    private final InventoryClient inventoryClient;
     private final ModelMapper modelMapper;
 
     @Override
@@ -127,7 +129,12 @@ public class HotelServiceImpl implements HotelService {
 
         if(StringUtils.hasText(roomRequestDTO.getRoomNumber())) room.setRoomNumber(roomRequestDTO.getRoomNumber());
         if(StringUtils.hasText(roomRequestDTO.getType())) room.setType(RoomType.valueOf(roomRequestDTO.getType()));
-        if(StringUtils.hasText(roomRequestDTO.getStatus().toString())) room.setStatus(Status.valueOf(roomRequestDTO.getStatus().toString()));
+        if(StringUtils.hasText(roomRequestDTO.getStatus().toString())) {
+            if(roomRequestDTO.getStatus().toString().equals("INACTIVE")) {
+                inventoryClient.deleteInactive(roomId);
+            }
+            room.setStatus(Status.valueOf(roomRequestDTO.getStatus().toString()));
+        }
         if(roomRequestDTO.getCapacity() != null) room.setCapacity(roomRequestDTO.getCapacity());
         if(roomRequestDTO.getBasePrice() != null) room.setBasePrice(roomRequestDTO.getBasePrice());
         if(roomRequestDTO.getImageUrls() != null) room.setImageUrls(roomRequestDTO.getImageUrls());
@@ -148,6 +155,7 @@ public class HotelServiceImpl implements HotelService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ApiException("Room not found", HttpStatus.NOT_FOUND));
         room.setStatus(Status.INACTIVE);
+        inventoryClient.deleteInactive(roomId);
         roomRepository.save(room);
     }
 }
