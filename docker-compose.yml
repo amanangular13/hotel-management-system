@@ -1,0 +1,82 @@
+version: "3.8"
+services:
+  discovery-server:
+    build: ./discovery-server
+    ports:
+      - "8761:8761"
+
+  config-server:
+    build: ./config-server
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+    ports:
+      - "8888:8888"
+    depends_on:
+      - discovery-server
+
+  api-gateway:
+    build: ./api-gateway
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+    ports:
+      - "8080:8080"
+    depends_on:
+      - discovery-server
+      - config-server
+
+  auth-service:
+    build: ./auth-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8081:8081"
+
+  booking-service:
+    build: ./booking-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8082:8082"
+
+  hotel-service:
+    build: ./hotel-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8083:8083"
+
+  inventory-service:
+    build: ./inventory-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8084:8084"
+
+  loyalty-service:
+    build: ./loyalty-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8085:8085"
+
+  payment-service:
+    build: ./payment-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8086:8086"
+
+  user-service:
+    build: ./user-service
+    depends_on:
+      - discovery-server
+      - config-server
+    ports:
+      - "8087:8087"
