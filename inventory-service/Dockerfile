@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Railway will inject PORT, default to 8080
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=8084
+EXPOSE 8084
 
 ENTRYPOINT ["java", "-Dserver.port=${PORT}", "-jar", "app.jar"]

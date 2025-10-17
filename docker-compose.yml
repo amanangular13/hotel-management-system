@@ -27,56 +27,155 @@ services:
 
   auth-service:
     build: ./auth-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
     depends_on:
       - discovery-server
       - config-server
     ports:
       - "8081:8081"
 
+  booking-db:
+    image: mysql:8.0
+    container_name: booking-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: bookingDB
+    ports:
+      - "3307:3306"
+
   booking-service:
     build: ./booking-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://booking-db:3306/bookingDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - booking-db
     ports:
       - "8082:8082"
 
+  hotel-db:
+    image: mysql:8.0
+    container_name: hotel-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: hotelDB
+    ports:
+      - "3308:3306"
+
   hotel-service:
     build: ./hotel-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://hotel-db:3306/hotelDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - hotel-db
     ports:
       - "8083:8083"
 
+  inventory-db:
+    image: mysql:8.0
+    container_name: inventory-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: inventoryDB
+    ports:
+      - "3309:3306"
+
   inventory-service:
     build: ./inventory-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://inventory-db:3306/inventoryDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - inventory-db
     ports:
       - "8084:8084"
 
+  loyalty-db:
+    image: mysql:8.0
+    container_name: loyalty-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: loyaltyDB
+    ports:
+      - "3310:3306"
+
   loyalty-service:
     build: ./loyalty-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://loyalty-db:3306/loyaltyDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - loyalty-db
     ports:
       - "8085:8085"
 
+  payment-db:
+    image: mysql:8.0
+    container_name: payment-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: paymentDB
+    ports:
+      - "3311:3306"
+
   payment-service:
     build: ./payment-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://payment-db:3306/paymentDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - payment-db
     ports:
       - "8086:8086"
 
+  user-db:
+    image: mysql:8.0
+    container_name: user-db
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: userDB
+    ports:
+      - "3312:3306"
+
   user-service:
     build: ./user-service
+    environment:
+      - EUREKA_SERVER=http://discovery-server:8761/eureka/
+      - CONFIG_SERVER=http://config-server:8888
+      - SPRING_DATASOURCE_URL=jdbc:mysql://user-db:3306/userDB
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
       - discovery-server
       - config-server
+      - user-db
     ports:
       - "8087:8087"
