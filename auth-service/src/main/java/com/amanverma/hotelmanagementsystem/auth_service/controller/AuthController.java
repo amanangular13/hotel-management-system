@@ -10,7 +10,9 @@ import com.amanverma.hotelmanagementsystem.auth_service.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,7 @@ public class AuthController {
         LoginResponseDTO loginResponse = authService.login(request);
 
         ApiResponse<LoginResponseDTO> response = ApiResponse.<LoginResponseDTO>builder()
-                .data(loginResponse)
+                .data(null)
                 .error(null)
                 .success(true)
                 .message("Successfully Authenticated")
@@ -37,7 +39,14 @@ public class AuthController {
                 .timestamp(LocalDateTime.now())
                 .build();
 
-        return ResponseEntity.ok(response);
+        ResponseCookie jwtCookie = ResponseCookie.from("jwt", loginResponse.getToken())
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(60 * 60)
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
     }
 
     @PostMapping("/register")
