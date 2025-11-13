@@ -53,6 +53,6 @@ public class AuthService {
                 user.getEmail(),
                 List.of(user.getRole().name())
         );
-        return new LoginResponseDTO(token);
+        return new LoginResponseDTO(token, user.getRole().name());
     }
 }
