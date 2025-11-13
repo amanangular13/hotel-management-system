@@ -31,7 +31,7 @@ public class AuthController {
         LoginResponseDTO loginResponse = authService.login(request);
 
         ApiResponse<LoginResponseDTO> response = ApiResponse.<LoginResponseDTO>builder()
-                .data(null)
+                .data(loginResponse)
                 .error(null)
                 .success(true)
                 .message("Successfully Authenticated")
