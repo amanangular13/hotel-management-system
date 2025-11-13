@@ -5,6 +5,7 @@ import com.amanverma.hotelmanagementsystem.api_gateway.util.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -38,12 +39,24 @@ public class JwtAuthenticationFilter implements WebFilter {
             return chain.filter(exchange);
         }
 
+        String token = null;
+
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return Mono.error(new ApiException("Missing or invalid Authorization header", HttpStatus.UNAUTHORIZED));
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
         }
 
-        String token = authHeader.substring(7);
+        if (token == null) {
+            HttpCookie jwtCookie = request.getCookies().getFirst("jwt");
+            if (jwtCookie != null) {
+                token = jwtCookie.getValue();
+            }
+        }
+
+        if (token == null) {
+            return Mono.error(new ApiException("Missing JWT (Authorization header or cookie)", HttpStatus.UNAUTHORIZED));
+        }
+
         try {
             Claims claims = jwtUtil.extractAllClaims(token);
             String email = claims.getSubject();
