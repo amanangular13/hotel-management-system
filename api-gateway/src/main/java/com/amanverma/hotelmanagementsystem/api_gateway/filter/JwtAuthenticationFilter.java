@@ -74,11 +74,13 @@ public class JwtAuthenticationFilter implements WebFilter {
                     .header("X-User-Roles", String.join(",", roles))
                     .build();
 
+            exchange.getResponse().beforeCommit(() -> {
+                exchange.getResponse().getHeaders().add("X-User-Id", email);
+                exchange.getResponse().getHeaders().add("X-User-Roles", String.join(",", roles));
+                return Mono.empty();
+            });
+
             return chain.filter(exchange.mutate().request(mutated).build())
-                    .doOnSuccess(unused -> {
-                        exchange.getResponse().getHeaders().add("X-User-Id", email);
-                        exchange.getResponse().getHeaders().add("X-User-Roles", String.join(",", roles));
-                    })
                     .contextWrite(ReactiveSecurityContextHolder.withSecurityContext(Mono.just(context)));
 
         } catch (Exception e) {

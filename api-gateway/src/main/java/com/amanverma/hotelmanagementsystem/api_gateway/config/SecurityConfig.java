@@ -53,12 +53,11 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:4200", "https://your-frontend-domain.com"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
+        config.setExposedHeaders(List.of("X-User-Id", "X-User-Roles"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
-
 }
