@@ -171,12 +171,17 @@ Run locally (example):
 
 🧩 Future Enhancements (Roadmap)
 
-- Swagger / OpenAPI for each service (auto-generated docs)
-
-- Centralized logging (Grafana Loki) & distributed tracing (Sleuth + Zipkin / Tempo)
-
-- Event-driven communication (Kafka) for async operations (e.g., bookings → loyalty)
-
-- Full test coverage (unit + integration with Testcontainers)
-
-- Minimal Angular frontend (optional) or API Postman collection for demo
+| Area               | Current Status | Needed for Enterprise   |
+| ------------------ | -------------- | ----------------------- |
+| Auth & Gateway     | ✅              | Optional OAuth2         |
+| Config & Discovery | ✅              | Stable                  |
+| Logging            | ⚠️ Basic       | Grafana Loki            |
+| Monitoring         | ❌              | Micrometer + Prometheus |
+| Tracing            | ❌              | Sleuth + Zipkin         |
+| API Docs           | ❌              | Swagger/OpenAPI         |
+| DB Migrations      | ⚠️ Manual      | Flyway                  |
+| Caching            | ❌              | Redis                   |
+| Messaging          | ❌              | Kafka (optional)        |
+| Tests              | ⚠️ Minimal     | Unit + Integration      |
+| CI/CD              | ⚠️ Manual      | GitHub Actions          |
+| Observability      | ⚠️ Partial     | Actuator endpoints      |
