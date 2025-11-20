@@ -187,5 +187,11 @@ Run locally (example):
 | Observability      | ⚠️ Partial     | Actuator endpoints      |
 | Frontend           | ⚠️ Partial     | Angular 20+ (zoneless)  |
 
+
+
+📷 Screenshots
+
 <img width="2221" height="1067" alt="Screenshot 2025-11-20 233803" src="https://github.com/user-attachments/assets/a567b221-8085-4a81-a345-38a1613adb67" />
+<img width="2225" height="1142" alt="Screenshot 2025-11-20 233949" src="https://github.com/user-attachments/assets/4ca95669-d413-4ff1-83d8-7d79235aa88e" />
+
 
