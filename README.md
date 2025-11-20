@@ -186,3 +186,6 @@ Run locally (example):
 | CI/CD              | ⚠️ Manual      | GitHub Actions          |
 | Observability      | ⚠️ Partial     | Actuator endpoints      |
 | Frontend           | ⚠️ Partial     | Angular 20+ (zoneless)  |
+
+<img width="2221" height="1067" alt="Screenshot 2025-11-20 233803" src="https://github.com/user-attachments/assets/a567b221-8085-4a81-a345-38a1613adb67" />
+
