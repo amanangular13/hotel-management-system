@@ -185,3 +185,4 @@ Run locally (example):
 | Tests              | ⚠️ Minimal     | Unit + Integration      |
 | CI/CD              | ⚠️ Manual      | GitHub Actions          |
 | Observability      | ⚠️ Partial     | Actuator endpoints      |
+| Frontend           | ⚠️ Partial     | Angular 20+ (zoneless)  |
