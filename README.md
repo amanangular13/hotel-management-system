@@ -99,7 +99,7 @@ Each endpoint is grouped by Access Level: 🔓 Public • 👤 User • 🛎️ 
 
 🌐 System Interaction & Flow
 
-- Config Server holds centralized configurations (YAML/properties) in a Git repo. Each microservice reads its config from Config Server at startup.
+- Config Server holds centralized configurations (YAML/properties) in a Git repo (https://github.com/amanangular13/hotel-config-repo). Each microservice reads its config from Config Server at startup.
 
 - Eureka performs service registration and discovery; gateway & services use it for load-balancing and service resolution.
 
